@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đề thi trắc nghiệm - Trung bình tích phân</title>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+    padding:20px;
+    line-height:1.6;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+h1,h2{
+    color:#005a9c;
+}
+
+.question{
+    background:white;
+    padding:20px;
+    margin-bottom:25px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.option{
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin:8px 0;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.option:hover{
+    background:#f0f0f0;
+}
+
+.correct{
+    background:#b7ffbf !important;
+    border:2px solid green;
+}
+
+.wrong{
+    background:#ffbdbd !important;
+    border:2px solid red;
+}
+
+.explanation{
+    display:none;
+    margin-top:15px;
+    padding:15px;
+    background:#eef5ff;
+    border-left:5px solid #005a9c;
+    border-radius:8px;
+}
+
+.easy{
+    border-left:8px solid #2ecc71;
+}
+
+.medium{
+    border-left:8px solid #f39c12;
+}
+
+.hard{
+    border-left:8px solid #e74c3c;
+}
+
+.theory{
+    border-left:8px solid #3498db;
+}
+
+.score-box{
+    position:sticky;
+    top:10px;
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+button.download{
+    background:#005a9c;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button.download:hover{
+    background:#003f70;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="score-box">
+<h2>ĐỀ THI TƯƠNG TÁC - TRUNG BÌNH TÍCH PHÂN</h2>
+<p><b>20 câu hỏi:</b> 5 lý thuyết + 15 bài tập</p>
+<p id="score">Điểm hiện tại: 0 / 20</p>
+
+<button class="download" onclick="downloadHTML()">Tải file HTML</button>
+</div>
+
+<div id="quiz"></div>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+type:"theory",
+question:"1. Trung bình tích phân biểu diễn điều gì?",
+options:[
+"Diện tích nhỏ nhất",
+"Chiều cao trung bình của đồ thị",
+"Đạo hàm của hàm số",
+"Chu vi hình phẳng"
+],
+correct:1,
+explanation:"Trung bình tích phân mô tả chiều cao trung bình của đồ thị trên đoạn [a,b].",
+tip:"Hãy nhớ: diện tích chia chiều dài = chiều cao trung bình."
+},
+
+{
+type:"theory",
+question:"2. Công thức trung bình tích phân là gì?",
+options:[
+"$\\\\int_a^b f(x)dx$",
+"$\\\\frac{1}{b-a}\\\\int_a^b f(x)dx$",
+"$f'(x)$",
+"$f(a)+f(b)$"
+],
+correct:1,
+explanation:"Theo định lý trung bình tích phân: $$f_{tb}=\\\\frac{1}{b-a}\\\\int_a^b f(x)dx$$",
+tip:"Công thức luôn có phần chia cho độ dài đoạn $b-a$."
+},
+
+{
+type:"theory",
+question:"3. Tích phân $\\\\int_a^b f(x)dx$ biểu diễn gì về mặt hình học?",
+options:[
+"Chu vi",
+"Độ dốc",
+"Diện tích dưới đồ thị",
+"Giá trị lớn nhất"
+],
+correct:2,
+explanation:"Tích phân xác định diện tích hình cong giới hạn bởi đồ thị và trục hoành.",
+tip:"Tích phân = cộng dồn diện tích."
+},
+
+{
+type:"theory",
+question:"4. Trong công thức trung bình tích phân, $b-a$ đại diện cho gì?",
+options:[
+"Chiều cao",
+"Độ dài đoạn",
+"Đạo hàm",
+"Tốc độ biến thiên"
+],
+correct:1,
+explanation:"$b-a$ là độ dài khoảng xác định.",
+tip:"Chiều dài đáy của hình chữ nhật tương đương."
+},
+
+{
+type:"theory",
+question:"5. Ý tưởng trực giác của trung bình tích phân là gì?",
+options:[
+"Biến đường cong thành hình chữ nhật tương đương",
+"Biến tích phân thành đạo hàm",
+"Tính nghiệm phương trình",
+"Tính xác suất"
+],
+correct:0,
+explanation:"Ta thay đường cong nhấp nhô bằng hình chữ nhật có cùng diện tích.",
+tip:"Chiều cao hình chữ nhật chính là giá trị trung bình."
+},
+
+{
+type:"easy",
+question:"6. Tính giá trị trung bình của $f(x)=2$ trên đoạn $[0,4]$",
+options:[
+"1",
+"2",
+"4",
+"8"
+],
+correct:1,
+explanation:"Hàm hằng luôn có giá trị trung bình bằng chính nó.",
+tip:"Không cần tích phân dài dòng với hàm hằng."
+},
+
+{
+type:"easy",
+question:"7. Tính $\\\\int_0^1 xdx$",
+options:[
+"$\\\\frac12$",
+"$1$",
+"$2$",
+"$\\\\frac13$"
+],
+correct:0,
+explanation:"$$\\\\int_0^1 xdx = \\\\left[\\\\frac{x^2}{2}\\\\right]_0^1 = \\\\frac12$$",
+tip:"Nguyên hàm của $x$ là $x^2/2$."
+},
+
+{
+type:"easy",
+question:"8. Giá trị trung bình của $f(x)=x$ trên $[0,2]$ là:",
+options:[
+"$1$",
+"$2$",
+"$3$",
+"$\\\\frac12$"
+],
+correct:0,
+explanation:"$$f_{tb}=\\\\frac12\\\\int_0^2 xdx = \\\\frac12 \\\\cdot 2 =1$$",
+tip:"Hàm bậc nhất thường có trung bình bằng trung điểm."
+},
+
+{
+type:"easy",
+question:"9. Tính $\\\\int_0^2 1dx$",
+options:[
+"$0$",
+"$1$",
+"$2$",
+"$4$"
+],
+correct:2,
+explanation:"Diện tích hình chữ nhật đáy 2 cao 1 bằng 2.",
+tip:"Hàm hằng rất dễ tính diện tích."
+},
+
+{
+type:"easy",
+question:"10. Giá trị trung bình của $f(x)=5$ trên mọi đoạn là:",
+options:[
+"$0$",
+"$1$",
+"$5$",
+"Phụ thuộc đoạn"
+],
+correct:2,
+explanation:"Hàm hằng có giá trị trung bình chính bằng hằng số đó.",
+tip:"Không cần tính tích phân."
+},
+
+{
+type:"medium",
+question:"11. Giá trị trung bình của $f(x)=x^2$ trên $[0,2]$ là:",
+options:[
+"$\\\\frac43$",
+"$2$",
+"$1$",
+"$\\\\frac23$"
+],
+correct:0,
+explanation:"$$f_{tb}=\\\\frac12\\\\int_0^2 x^2dx=\\\\frac12\\\\cdot\\\\frac83=\\\\frac43$$",
+tip:"Đây là ví dụ kinh điển trong bài giảng."
+},
+
+{
+type:"medium",
+question:"12. Tính $\\\\int_1^3 xdx$",
+options:[
+"$2$",
+"$4$",
+"$6$",
+"$8$"
+],
+correct:1,
+explanation:"$$\\\\left[\\\\frac{x^2}{2}\\\\right]_1^3=\\\\frac92-\\\\frac12=4$$",
+tip:"Nhớ thay cận trên trừ cận dưới."
+},
+
+{
+type:"medium",
+question:"13. Giá trị trung bình của $f(x)=3x$ trên $[0,2]$ là:",
+options:[
+"$3$",
+"$6$",
+"$1$",
+"$9$"
+],
+correct:0,
+explanation:"$$f_{tb}=\\\\frac12\\\\int_0^2 3xdx=\\\\frac12\\\\cdot 6=3$$",
+tip:"Có thể lấy trung bình của hai đầu mút với hàm bậc nhất."
+},
+
+{
+type:"medium",
+question:"14. Tính $\\\\int_0^1 x^2dx$",
+options:[
+"$\\\\frac13$",
+"$\\\\frac12$",
+"$1$",
+"$2$"
+],
+correct:0,
+explanation:"$$\\\\left[\\\\frac{x^3}{3}\\\\right]_0^1=\\\\frac13$$",
+tip:"Nguyên hàm $x^n$ là $x^{n+1}/(n+1)$."
+},
+
+{
+type:"medium",
+question:"15. Giá trị trung bình của $f(x)=x+1$ trên $[0,2]$ là:",
+options:[
+"$2$",
+"$1$",
+"$3$",
+"$4$"
+],
+correct:0,
+explanation:"$$f_{tb}=\\\\frac12\\\\int_0^2(x+1)dx=2$$",
+tip:"Hàm bậc nhất có thể lấy trung bình hai đầu: $(1+3)/2=2$."
+},
+
+{
+type:"hard",
+question:"16. Giá trị trung bình của $f(x)=x^3$ trên $[0,2]$ là:",
+options:[
+"$4$",
+"$2$",
+"$8$",
+"$1$"
+],
+correct:0,
+explanation:"$$f_{tb}=\\\\frac12\\\\int_0^2 x^3dx=\\\\frac12\\\\cdot4=4$$",
+tip:"Nguyên hàm của $x^3$ là $x^4/4$."
+},
+
+{
+type:"hard",
+question:"17. Tính $\\\\int_0^{\\\\pi} \\\\sin xdx$",
+options:[
+"$1$",
+"$2$",
+"$0$",
+"$\\\\pi$"
+],
+correct:1,
+explanation:"$$[-\\\\cos x]_0^{\\\\pi}=2$$",
+tip:"Tích phân sin trên nửa chu kỳ luôn bằng 2."
+},
+
+{
+type:"hard",
+question:"18. Giá trị trung bình của $f(x)=\\\\sin x$ trên $[0,\\\\pi]$ là:",
+options:[
+"$\\\\frac{2}{\\\\pi}$",
+"$1$",
+"$0$",
+"$2$"
+],
+correct:0,
+explanation:"$$f_{tb}=\\\\frac1{\\\\pi}\\\\int_0^{\\\\pi}\\\\sin xdx=\\\\frac2{\\\\pi}$$",
+tip:"Lấy diện tích 2 chia chiều dài $\\\\pi$."
+},
+
+{
+type:"hard",
+question:"19. Tính $\\\\int_1^2 \\\\frac1x dx$",
+options:[
+"$\\\\ln2$",
+"$1$",
+"$2$",
+"$e$"
+],
+correct:0,
+explanation:"$$\\\\int_1^2 \\\\frac1x dx = \\\\ln2$$",
+tip:"Nguyên hàm của $1/x$ là $\\\\ln|x|$."
+},
+
+{
+type:"hard",
+question:"20. Giá trị trung bình của $f(x)=2x^2$ trên $[0,1]$ là:",
+options:[
+"$\\\\frac23$",
+"$1$",
+"$2$",
+"$\\\\frac13$"
+],
+correct:0,
+explanation:"$$f_{tb}=\\\\int_0^1 2x^2dx = \\\\frac23$$",
+tip:"Đừng quên đoạn dài bằng 1 nên không đổi giá trị."
+}
+
+];
+
+let score = 0;
+let answered = new Set();
+
+function renderQuiz(){
+    const quiz = document.getElementById("quiz");
+
+    questions.forEach((q,index)=>{
+
+        const div = document.createElement("div");
+        div.className = "question " + q.type;
+
+        let levelText = "";
+
+        if(q.type==="easy") levelText="🟢 Dễ";
+        if(q.type==="medium") levelText="🟠 Trung bình";
+        if(q.type==="hard") levelText="🔴 Khó";
+        if(q.type==="theory") levelText="🔵 Lý thuyết";
+
+        div.innerHTML = `
+            <h3>${levelText}</h3>
+            <p>${q.question}</p>
+        `;
+
+        q.options.forEach((opt,i)=>{
+            const btn = document.createElement("div");
+            btn.className = "option";
+            btn.innerHTML = opt;
+
+            btn.onclick = ()=>{
+
+                if(answered.has(index)) return;
+
+                answered.add(index);
+
+                if(i===q.correct){
+                    btn.classList.add("correct");
+                    score++;
+                }else{
+                    btn.classList.add("wrong");
+                    div.querySelectorAll(".option")[q.correct].classList.add("correct");
+                }
+
+                document.getElementById("score").innerHTML =
+                    `Điểm hiện tại: ${score} / 20`;
+
+                explanation.style.display="block";
+
+                MathJax.typesetPromise();
+            };
+
+            div.appendChild(btn);
+        });
+
+        const explanation = document.createElement("div");
+        explanation.className = "explanation";
+        explanation.innerHTML = `
+            <b>Đáp án đúng:</b> ${q.options[q.correct]}<br><br>
+            <b>Giải thích:</b> ${q.explanation}<br><br>
+            <b>Mẹo làm nhanh:</b> ${q.tip}
+        `;
+
+        div.appendChild(explanation);
+
+        quiz.appendChild(div);
+    });
+
+    MathJax.typesetPromise();
+}
+
+function downloadHTML(){
+    const htmlContent = document.documentElement.outerHTML;
+    const blob = new Blob([htmlContent], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'de_thi_trung_binh_tich_phan.html';
+    a.click();
+}
+
+renderQuiz();
+
+</script>
+
+</body>
+</html>
