@@ -1,0 +1,621 @@
+\documentclass[12pt,a4paper]{article}
+
+% =========================================================
+% PACKAGES
+% =========================================================
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{etoolbox}
+\usepackage{tcolorbox}
+\usepackage{array,booktabs,longtable}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{ragged2e}
+\usepackage{soul}
+
+\usetikzlibrary{
+arrows.meta,
+calc,
+decorations.pathmorphing,
+positioning,
+shadows.blur,
+shapes.geometric,
+shapes.symbols
+}
+
+% =========================================================
+% FONT
+% =========================================================
+\setmainfont{Arial}
+
+\newfontfamily{\screenfont}{Courier New}[Scale=0.95]
+\newfontfamily{\characterfont}{Courier New}[Scale=1.1]
+
+% =========================================================
+% COLORS
+% =========================================================
+\definecolor{maincolor}{RGB}{0,90,160}
+\definecolor{secondcolor}{RGB}{180,40,90}
+\definecolor{film}{RGB}{40,40,40}
+\definecolor{philosophycolor}{RGB}{139,69,19}
+\definecolor{duymtcolor}{RGB}{46,204,113}
+\definecolor{structurecolor}{RGB}{52,152,219}
+\definecolor{metaphorcolor}{RGB}{155,89,182}
+\definecolor{reframe}{RGB}{241,196,15}
+\definecolor{harnesscolor}{RGB}{230,126,34}
+\definecolor{linecolor}{RGB}{220,80,60}
+\definecolor{teachercolor}{RGB}{0,100,150}
+\definecolor{studentcolor}{RGB}{200,100,50}
+
+% =========================================================
+% HEADER FOOTER
+% =========================================================
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{
+\textcolor{maincolor}{
+\textbf{Bài giảng: Đạo hàm của hàm ẩn – Kỹ thuật “đạo hàm hai vế và cô lập y’}
+}
+}
+
+\fancyhead[R]{
+\textcolor{maincolor}{
+\textbf{\thepage}
+}
+}
+
+\fancyfoot[C]{
+\textit{“Hàm ẩn là nơi x và y quyện vào nhau – đạo hàm hai vế, rồi giải tìm y'.”}
+}
+
+% =========================================================
+% SCREENPLAY COMMANDS
+% =========================================================
+
+\newcommand{\scene}[1]{
+\vspace{1em}
+\noindent
+{\Large\bfseries\sffamily #1}
+\vspace{0.5em}\par
+}
+
+\newcommand{\character}[1]{
+\vspace{0.8em}
+\noindent
+{\centering
+\characterfont
+\bfseries
+\MakeUppercase{#1}}
+\par
+\vspace{0.25em}
+}
+
+\newcommand{\dialogue}[1]{
+\noindent
+{\screenfont
+\leftskip=1.5cm
+\rightskip=1.5cm
+#1}
+\par
+\vspace{0.6em}
+}
+
+\newcommand{\action}[1]{
+\noindent
+{\screenfont\itshape #1}
+\par
+\vspace{0.5em}
+}
+
+% =========================================================
+% TCOLORBOX
+% =========================================================
+
+\newtcolorbox{definitionbox}{
+colback=blue!3,
+colframe=blue!70!black,
+title=\faBook\ Định nghĩa,
+fonttitle=\bfseries,
+rounded corners
+}
+
+\newtcolorbox{metabox}{
+colback=yellow!5,
+colframe=orange,
+title=\faLightbulb\ Ẩn dụ trực giác,
+fonttitle=\bfseries,
+rounded corners
+}
+
+\newtcolorbox{philosophybox}{
+colback=purple!4,
+colframe=violet,
+title=\faQuoteLeft\ Triết lý toán học,
+fonttitle=\bfseries,
+rounded corners
+}
+
+\newtcolorbox{notebox}{
+colback=red!4,
+colframe=red!70!black,
+title=\faExclamationTriangle\ Lưu ý,
+fonttitle=\bfseries,
+rounded corners
+}
+
+\newtcolorbox{aibox}{
+colback=blue!3,
+colframe=maincolor,
+title=\faRobot\ Góc nhìn AI-first,
+fonttitle=\bfseries,
+rounded corners
+}
+
+\newtcolorbox{principlebox}[2][]{
+colback=#2!5,
+colframe=#2,
+title=\faCogs\ #1,
+fonttitle=\bfseries,
+rounded corners,
+boxrule=0.8pt
+}
+
+% =========================================================
+% TITLE
+% =========================================================
+
+\title{
+\vspace{-1.2cm}
+{\color{maincolor}
+\Huge\textbf{ĐẠO HÀM CỦA HÀM ẨN}
+}\\[0.2cm]
+{\Large \textit{Kỹ thuật “đạo hàm hai vế – cô lập y’”}}\\[0.3cm]
+{\large Từ phương trình trộn lẫn đến công thức đạo hàm}
+}
+
+\author{
+\textcolor{maincolor}{\textbf{Dr.rer.nat Duymt}}\\
+\small Bài giảng về giải tích – Hàm ẩn
+}
+
+\date{\today}
+
+% =========================================================
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+% =========================================================
+% KHUNG QR + TÓM TẮT
+% =========================================================
+
+\begin{center}
+\begin{tikzpicture}
+
+\draw[thick, rounded corners=5pt]
+(0,-1) rectangle (16,9);
+
+\draw[dashed, thick]
+(5.5,-1) -- (5.5,9);
+
+% QR code
+\node at (2.75,4) {
+    \begin{minipage}{5cm}
+        \centering
+        \includegraphics[
+            width=4cm,
+            height=4cm,
+            keepaspectratio
+        ]{QR/implicit_diff_qr.png}\\
+        \vspace{0.3cm}
+        \textbf{QUÉT MÃ QR}\\
+        \small Nghe toàn bộ bài giảng
+    \end{minipage}
+};
+
+% Tóm tắt nội dung bên phải
+\node at (11,4){
+\begin{minipage}{9.5cm}
+\centering
+\textbf{\Large TÓM TẮT BÀI GIẢNG}\\[0.3cm]
+\begin{tabular}{p{9cm}}
+$\bullet$ \textbf{Phân biệt hàm tường minh} ($y = f(x)$) và \textbf{hàm ẩn} (phương trình $f(x,y)=0$, x và y trộn lẫn). \\
+$\bullet$ \textbf{Hai bước cốt lõi:} (1) Đạo hàm hai vế theo $x$ (dùng quy tắc tích, đạo hàm hợp). (2) Nhóm các số hạng chứa $y'$ và cô lập $y'$ để tìm công thức. \\
+$\bullet$ \textbf{Công cụ:} Đạo hàm tích, đạo hàm hợp, giải phương trình đại số. \\
+$\bullet$ \textbf{Ví dụ minh họa:} $x^3 + 3x^2y + y^2x + y^3 = 1$ → tìm $y'_x$. \\
+$\bullet$ \textbf{Triết lý:} Hàm ẩn dạy ta rằng không phải lúc nào cũng tách bạch được biến – nhưng vẫn có thể tìm tốc độ thay đổi nhờ quan hệ ràng buộc.
+\end{tabular}
+\end{minipage}
+};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+
+% =========================================================
+% TÓM TẮT VĂN XUÔI
+% =========================================================
+
+\begin{center}
+{\Large\color{secondcolor}\textbf{Tóm tắt nội dung bài học}}
+\end{center}
+
+\begin{justify}
+\itshape
+
+\textcolor{maincolor}{
+Nguồn tài liệu này trình bày một bài giảng toán học tập trung vào khái niệm và phương pháp tính \textbf{đạo hàm của hàm ẩn}. Tác giả bắt đầu bằng việc \textbf{phân biệt hàm tường minh}, nơi biến số và hàm số được tách biệt rõ ràng, với \textbf{hàm ẩn} là dạng phương trình mà các đại lượng x và y trộn lẫn với nhau. Để giải quyết các bài toán này, quy trình thực hiện được tóm gọn qua \textbf{hai bước cơ bản} là đạo hàm cả hai vế theo biến x và sau đó thực hiện biến đổi đại số. Người dạy nhấn mạnh việc sử dụng \textbf{quy tắc đạo hàm tích} và đạo hàm hợp để xử lý các biểu thức phức tạp trước khi gom nhóm các thành phần chứa y'. Cuối cùng, mục tiêu cốt lõi là \textbf{cô lập y'} sang một vế để tìm ra công thức đạo hàm cuối cùng từ phương trình ban đầu. Cách tiếp cận này giúp người học nắm vững kỹ thuật \textbf{giải phương trình đạo hàm} một cách hệ thống và chính xác.
+}
+
+\end{justify}
+
+% =========================================================
+% PHẦN ĐIỆN ẢNH – BÀI GIẢNG (PHÔNG COURIER NEW)
+% =========================================================
+\newpage
+{\setmainfont{Courier New}
+\pagecolor{film!8}
+
+\begin{center}
+    {\Huge \textbf{ĐẠO HÀM CỦA HÀM ẨN}}\\[0.3cm]
+    {\Large \textit{Bài giảng: Kỹ thuật đạo hàm hai vế và cô lập y'}}\\[0.5cm]
+    {\large \textcolor{teachercolor}{Dr.rer.nat Duymt}}
+\end{center}
+
+\vspace{1cm}
+
+\section*{NỘI DUNG BÀI GIẢNG – HỘI THOẠI VERBATIM}
+
+\action{Giảng viên đứng trước bảng, viết các công thức.}
+
+\subsection*{\textcolor{teachercolor}{\textbf{Dr.rer.nat DUYMT:}}}
+Bài giảng tiếp theo thầy muốn giảng cho các em về \textbf{đạo hàm của hàm ẩn}. Nếu hàm một bên và biến một bên thì ta gọi là \textbf{hàm tường minh} không ẩn. Ví dụ như $y = 2x$ thì đạo hàm của nó là tính theo công thức. $y = 2x$ thì đạo hàm của $y$ theo bên $x'$ sẽ bằng là $2$. $y$ bằng à $x$ lập phương. Đạo hàm của $y'$ sẽ là $3x^2$.
+
+\subsection*{\textcolor{teachercolor}{\textbf{Dr.rer.nat DUYMT:}}}
+Đây như vậy là rất là dễ. Chúng ta có hàm bên trái và biến bên phải thì gọi là hàm nghiệm. Còn hàm ẩn ấy tiếng Anh là \textbf{implicit function}. Nó là cái hàm mà \textbf{$xy$ là lẫn lộn với nhau}, phương trình của nó là $f(x, y) = 0$ nhá. Ví dụ như là bằng $0$ hay bằng $a$ hay bằng cái gì nó tùy nhưng mà nhưng mà không có phân tách là hàm một bên và biến một bên. Không có phân tách hàm bên trái biến bên phải hay là hàm bên phải biến bên trái, tức là không có phân tách ra mà nó lẫn với nhau. Ví dụ $y$ là hàm của $x$ nhưng mà phương trình của nó sẽ là $x^3 + x^2y + y^3 = 1$ thì đấy là hợp vật $y$ sẽ gộn nhau.
+
+\subsection*{\textcolor{teachercolor}{\textbf{Dr.rer.nat DUYMT:}}}
+Thế bây giờ tìm $y'$ theo biến $x$ thì tìm thế nào? Đầu tiên là chúng ta đạo hàm hai vế theo cái biến chúng ta cần đạo hàm. Còn nhớ thầy đọc cái cái cái đó không? Thầy vừa đọc xong là thầy quên lắm. Đọc lại nhá. Thằng nào có cái bút để đọc vì một chuỗi nó có thể nó quê. Rồi ví dụ đây là một hàm ẩn nữa này. Ví dụ đây là một hàm ẩn nữa này là \textbf{$x^3 + 3x^2y + y^2x + y^3 = 1$}. Đấy là một hàm ẩn. Bây giờ tìm $y'$ theo $x$. Tìm thế nào?
+
+\subsection*{\textcolor{teachercolor}{\textbf{Dr.rer.nat DUYMT:}}}
+Thì việc đầu tiên \textbf{bước một} là chúng ta \textbf{đạo hàm theo vế}. Đạo hàm hai vế theo cái biến cần đạo hàm là biến $x$ thì $x$ lập phương đạo hàm là $3x^2$. $3x^2y$ đạo hàm thì chúng ta sử dụng công thức đạo hàm bình thường thôi. Đạo hàm của một tích thì đạo hàm đến này nhân với cái kia cộng cái kia đạo hàm nhân cái này. $3x^2y$ đạo hàm sẽ là cộng với $6xy$ cộng với $3y'$ theo $x$ nhân $x^2$. Rồi $y^2x$ đạo hàm sẽ là $2yx$, $2y$ nhân với $y'$, $2y$ nhân $y'$ theo $x$ nhân $x$ cộng với đạo hàm của $x$ là $1$ tức là cộng với $y^2$ cộng với $3y^2$ nhân với $y'$, đạo hàm của $1$ thì bằng $0$.
+
+\subsection*{\textcolor{teachercolor}{\textbf{Dr.rer.nat DUYMT:}}}
+Và bây giờ \textbf{bước hai} là \textbf{nhóm $y'$ theo $x$ lại} và chuyển những cái gì không liên quan sang vế bên kia. Chuyển vế thì đổi dấu và chia là chúng ta giải phương trình tìm ra $y'_x$. Vậy là $y'_x$ à gom hết lại bên thừa số của $y'_x$ sẽ là \textbf{$3x^2 + 2xy + 3y^2$} là ta để bên trái, bên phải sẽ là \textbf{$-y^2 - 6xy - 3x^2$}. Và như vậy chúng ta có $y'$ theo $x$ sẽ bằng là trừ đi mở ngoặc \textbf{$(y^2 + 6xy + 3x^2)$} chia cho cái thừa số của $y'_x$ tức là chia cho $(3x^2 + 2xy + 3y^2)$ thì đấy đạo hàm của hàm ẩn nhớ cho thầy hai bước ngắn gọn đó là \textbf{đạo hàm hai vế} và \textbf{chuyển vế đổi dấu} xong đăng.
+
+\vspace{1cm}
+\begin{center}
+\textit{Hết bài giảng.}
+\end{center}
+
+\vspace{1cm}
+} % Kết thúc phông Courier New
+
+% =========================================================
+% PHẦN BÀI GIẢNG CHÍNH (TIMES NEW ROMAN)
+% =========================================================
+{\setmainfont{Times New Roman}
+\pagecolor{white}
+
+\section*{\color{maincolor}I. Bản chất hàm ẩn – Khi x và y quyện vào nhau}
+
+\begin{definitionbox}
+\textbf{Hàm tường minh (explicit function):} $y = f(x)$ – biến độc lập và phụ thuộc tách rời.
+\vspace{0.3cm}
+
+\textbf{Hàm ẩn (implicit function):} Phương trình dạng $F(x, y) = 0$, trong đó $y$ được xác định như một hàm của $x$ nhưng không được giải tường minh. Ví dụ: $x^3 + x^2y + y^3 = 1$, hay $x^3 + 3x^2y + y^2x + y^3 = 1$.
+\end{definitionbox}
+
+\begin{philosophybox}
+\textbf{Triết lý:} 
+\begin{center}
+\Large
+\textit{“Không phải lúc nào cũng có thể tách bạch y ra khỏi x – nhưng ta vẫn có thể tìm tốc độ thay đổi của y theo x nhờ mối quan hệ ràng buộc.”}
+\end{center}
+\end{philosophybox}
+
+\section*{\color{maincolor}II. Hai bước cốt lõi tính đạo hàm hàm ẩn}
+
+\begin{principlebox}[Quy trình 2 bước]{structurecolor}
+\textbf{Bước 1 – Đạo hàm hai vế theo $x$:} 
+\begin{itemize}
+    \item Đạo hàm từng số hạng, coi $y$ là hàm của $x$ (dùng quy tắc đạo hàm hợp).
+    \item Sử dụng quy tắc tích, thương, lũy thừa một cách linh hoạt.
+\end{itemize}
+
+\textbf{Bước 2 – Cô lập $y'$:}
+\begin{itemize}
+    \item Gom tất cả các số hạng chứa $y'$ về một vế.
+    \item Chuyển các số hạng không chứa $y'$ sang vế đối diện (đổi dấu).
+    \item Chia để tìm $y' = \frac{\text{(biểu thức không chứa y')}}{\text{(hệ số của y')}}$.
+\end{itemize}
+\end{principlebox}
+
+\section*{\color{maincolor}III. Ví dụ chi tiết từ bài giảng}
+
+Xét phương trình hàm ẩn:
+\[
+x^3 + 3x^2y + y^2x + y^3 = 1
+\]
+Tìm $\displaystyle y' = \frac{dy}{dx}$.
+
+\vspace{0.5cm}
+\textbf{Thực hiện Bước 1 – Đạo hàm hai vế theo $x$:}
+
+\begin{align*}
+\frac{d}{dx}(x^3) &= 3x^2 \\
+\frac{d}{dx}(3x^2y) &= 3\left[2x\cdot y + x^2\cdot y'\right] = 6xy + 3x^2y' \\
+\frac{d}{dx}(y^2x) &= (2y\cdot y')\cdot x + y^2\cdot 1 = 2xyy' + y^2 \\
+\frac{d}{dx}(y^3) &= 3y^2 y' \\
+\frac{d}{dx}(1) &= 0
+\end{align*}
+Vậy:
+\[
+3x^2 + (6xy + 3x^2y') + (2xyy' + y^2) + 3y^2y' = 0
+\]
+
+\vspace{0.5cm}
+\textbf{Bước 2 – Gom $y'$ và cô lập:}
+
+Nhóm các số hạng chứa $y'$:
+\[
+3x^2y' + 2xyy' + 3y^2y' = y'(3x^2 + 2xy + 3y^2)
+\]
+Các số hạng không chứa $y'$:
+\[
+3x^2 + 6xy + y^2
+\]
+Phương trình trở thành:
+\[
+y'(3x^2 + 2xy + 3y^2) + (3x^2 + 6xy + y^2) = 0
+\]
+\[
+\Rightarrow y'(3x^2 + 2xy + 3y^2) = -(3x^2 + 6xy + y^2)
+\]
+\[
+\Rightarrow y' = -\frac{3x^2 + 6xy + y^2}{3x^2 + 2xy + 3y^2}
+\]
+
+Kết quả đúng như trong bài giảng của Dr.rer.nat Duymt.
+
+\section*{\color{maincolor}IV. Kết nối các cấp độ – Từ lớp 11 đến giải tích nâng cao}
+
+\begin{table}[H]
+\centering
+\caption{Cùng một cấu trúc “đạo hàm ẩn” qua các cấp độ}
+\begin{tabular}{@{}l|l@{}}
+\toprule
+\textbf{Cấp độ} & \textbf{Biểu thức / ứng dụng} \\
+\midrule
+Lớp 11 & Đường tròn $x^2 + y^2 = R^2$ → $y' = -x/y$ (tiếp tuyến) \\
+Lớp 12 & Đường cong bậc ba, ví dụ $y^2 = x^3 + ax + b$ (đường elliptic) \\
+Đại học & Định lý hàm ẩn (Implicit Function Theorem) trong không gian $\mathbb{R}^n$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{metabox}
+\textbf{Ẩn dụ đa tầng:}
+\begin{itemize}
+    \item \textit{Tầng 1 (học sinh):} “Hai người bạn x và y quấn quýt lấy nhau, khó gỡ. Muốn biết y thay đổi thế nào khi x thay đổi, phải ‘đạo hàm cả hai phía’ rồi ‘gỡ dần’.”
+    \item \textit{Tầng 2 (sinh viên):} “Phương trình ràng buộc xác định một đa tạp con. Đạo hàm ẩn chính là phép tính vi phân trên đa tạp đó thông qua phép chiếu lên trục x.”
+\end{itemize}
+\end{metabox}
+
+\section*{\color{maincolor}V. Hệ quy chiếu sống – Ví dụ thực tế}
+
+\begin{philosophybox}
+\textbf{Kinh tế:} Đường cong bàng quan (indifference curve) $U(x,y)=const$ – không thể giải tường minh y theo x, nhưng tỷ lệ thay thế biên (MRS) chính là $-\frac{dy}{dx}$ tính bằng đạo hàm ẩn.
+\end{philosophybox}
+
+\begin{notebox}
+\textbf{Vật lý:} Phương trình trạng thái khí lý tưởng $PV = nRT$ – nếu coi $P$ và $V$ thay đổi, $T$ không đổi thì $P$ và $V$ liên hệ ẩn: $\frac{dP}{dV} = -P/V$ (đẳng nhiệt).
+\end{notebox}
+
+\section*{\color{maincolor}VI. Harnessing AI – Dạy máy tính tư duy như người thầy}
+
+\begin{aibox}
+\textbf{Prompt mẫu cho AI (theo tinh thần DUYMT):}
+\begin{verbatim}
+Bạn là một gia sư toán. Hãy dạy tôi đạo hàm hàm ẩn theo quy trình:
+1. Giải thích sự khác biệt giữa hàm tường minh và hàm ẩn bằng một câu chuyện.
+2. Đưa ra một ví dụ cụ thể, từng bước đạo hàm hai vế, giải thích lý do dùng quy tắc tích và đạo hàm hợp.
+3. Sau đó, hướng dẫn tôi cô lập y'.
+4. Kết thúc bằng một bài tập tương tự, nhưng đừng giải – hãy để tôi tự làm và bạn chỉ kiểm tra.
+\end{verbatim}
+\end{aibox}
+
+\section*{\color{maincolor}VII. Bảng tổng hợp cấu trúc “linh hồn – xác thân”}
+
+\begin{table}[H]
+\centering
+\caption{Giải nén cấu trúc đạo hàm hàm ẩn}
+\begin{tabular}{|p{3.5cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Linh hồn (cấu trúc)} & \textbf{Câu thần chú} & \textbf{Xác thân (không gian)} \\
+\hline
+Ràng buộc ẩn giữa các biến & “X và Y quấn quýt – đạo hàm cả hai vế, gỡ dần Y phẩy.” & Kinh tế (đường bàng quan), vật lý (phương trình trạng thái), hình học (đường cong bậc cao) \\
+\hline
+Đạo hàm hợp + tích & “Có Y thì nhớ Y phẩy, tích phân phải đủ hai thành phần.” & Mọi bài toán đạo hàm ẩn trong giải tích \\
+\hline
+Cô lập Y phẩy & “Đưa Y phẩy về một cõi, số còn lại sang sông – chia là xong.” & Giải phương trình đạo hàm tuyến tính theo y' \\
+\hline
+\end{tabular}
+\end{table}
+
+\section*{\color{maincolor}VIII. Tổng kết – Bài học chính}
+
+\begin{enumerate}
+    \item \textbf{Phân biệt hàm tường minh và hàm ẩn:} Tường minh thì $y = f(x)$, hàm ẩn là $F(x,y)=0$.
+    \item \textbf{Hai bước cốt lõi:} Đạo hàm hai vế (dùng quy tắc tích, hợp) → cô lập $y'$.
+    \item \textbf{Công cụ:} Đạo hàm của $y$ là $y'$, của $y^n$ là $n y^{n-1} y'$.
+    \item \textbf{Triết lý sư phạm:} Không học thuộc công thức, mà hiểu quy trình “đạo hàm – nhóm – giải”.
+    \item \textbf{Kết nối không gian:} Từ lớp 11 (đường tròn) đến đại học (định lý hàm ẩn).
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    font=\sffamily,
+    starburst/.style={
+        shape=starburst,
+        starburst point height=0.5cm,
+        fill=yellow!20,
+        draw=orange,
+        line width=1.5pt,
+        drop shadow,
+        align=center,
+        font=\bfseries,
+        minimum width=12cm,
+        minimum height=3.2cm
+    }
+]
+\node[starburst] at (0, 0) { 
+    “Hàm ẩn dạy ta rằng: không phải lúc nào cũng tách bạch được mọi thứ.\\[0.2cm]
+    Nhưng nhờ những ràng buộc, ta vẫn tìm được mối quan hệ vi phân –\\[0.1cm]
+    đó là sức mạnh của đạo hàm ẩn.”\\[0.3cm]
+    \normalsize -- Dr.rer.nat Duymt --
+};
+\end{tikzpicture}
+\caption{Châm ngôn cuối bài.}
+\end{figure}
+
+\begin{center}
+    {\large\color{maincolor}\textbf{--- HẾT BÀI GIẢNG ---}}
+\end{center}
+
+\begin{center}
+    \textit{“Hai bước: đạo hàm hai vế – cô lập y’. Hãy nhớ, đằng sau mỗi bài toán hàm ẩn là một câu chuyện về sự ràng buộc.”}
+\end{center}
+
+} % Kết thúc Times New Roman
+
+% =========================================================
+% PHẦN BỔ SUNG: BÀI TẬP TƯƠNG TÁC (TRẮC NGHIỆM)
+% =========================================================
+\newpage
+\section*{\color{maincolor}Bài tập tương tác: Đạo hàm hàm ẩn}
+\begin{center}
+    \textit{\textcolor{maincolor}{Hãy khoanh tròn đáp án đúng nhất. Mỗi câu đều có “điều công thức che giấu” – hãy đọc ra.}}
+\end{center}
+
+% Câu hỏi 1
+\begin{tcolorbox}[colback=blue!3, colframe=maincolor, title=\textbf{Câu 1: Bản chất hàm ẩn}]
+Hàm ẩn (implicit function) là:
+\begin{enumerate}[label=\Alph*., leftmargin=*]
+    \item Hàm số có dạng $y = f(x)$
+    \item \textbf{Phương trình $F(x,y)=0$ trong đó $x$ và $y$ trộn lẫn, không tách bạch}
+    \item Hàm số luôn giải được $y$ theo $x$
+    \item Hàm số không có đạo hàm
+\end{enumerate}
+\textcolor{maincolor}{\textbf{Đáp án:} \textbf{B}. Hàm ẩn là khi $x$ và $y$ “lẫn lộn”, ví dụ $x^2 + y^2 = 1$.}
+\end{tcolorbox}
+\vspace{0.5cm}
+
+% Câu hỏi 2
+\begin{tcolorbox}[colback=blue!3, colframe=maincolor, title=\textbf{Câu 2: Hai bước tính đạo hàm ẩn}]
+Theo bài giảng, quy trình tìm $y'$ của hàm ẩn gồm:
+\begin{enumerate}[label=\Alph*., leftmargin=*]
+    \item \textbf{Đạo hàm hai vế theo $x$ → gom $y'$ → cô lập $y'$}
+    \item Rút $y$ theo $x$ rồi đạo hàm
+    \item Đạo hàm từng số hạng rồi cộng lại
+    \item Chỉ cần đạo hàm vế trái
+\end{enumerate}
+\textcolor{maincolor}{\textbf{Đáp án:} \textbf{A}. Đó là hai bước: đạo hàm hai vế, sau đó nhóm và cô lập $y'$.}
+\end{tcolorbox}
+\vspace{0.5cm}
+
+% Câu hỏi 3
+\begin{tcolorbox}[colback=blue!3, colframe=maincolor, title=\textbf{Câu 3: Đạo hàm $y^3$ theo $x$}]
+Khi đạo hàm $y^3$ theo biến $x$ (với $y$ là hàm của $x$), ta được:
+\begin{enumerate}[label=\Alph*., leftmargin=*]
+    \item $3y^2$
+    \item \textbf{$3y^2 \cdot y'$}
+    \item $3y'^2$
+    \item $y^3$
+\end{enumerate}
+\textcolor{maincolor}{\textbf{Đáp án:} \textbf{B}. Do quy tắc đạo hàm hợp: $\frac{d}{dx}(y^3) = 3y^2 \frac{dy}{dx} = 3y^2 y'$.}
+\end{tcolorbox}
+\vspace{0.5cm}
+
+% Câu hỏi 4
+\begin{tcolorbox}[colback=blue!3, colframe=maincolor, title=\textbf{Câu 4: Quy tắc tích trong đạo hàm ẩn}]
+Với số hạng $3x^2y$, đạo hàm theo $x$ là:
+\begin{enumerate}[label=\Alph*., leftmargin=*]
+    \item $3x^2 y'$
+    \item $6x y$
+    \item \textbf{$6xy + 3x^2 y'$}
+    \item $6x y'$
+\end{enumerate}
+\textcolor{maincolor}{\textbf{Đáp án:} \textbf{C}. Đạo hàm tích: $(3x^2)'y + 3x^2(y)' = 6xy + 3x^2 y'$.}
+\end{tcolorbox}
+\vspace{0.5cm}
+
+% Câu hỏi 5
+\begin{tcolorbox}[colback=blue!3, colframe=maincolor, title=\textbf{Câu 5: Kết quả đạo hàm ẩn từ ví dụ}]
+Với phương trình $x^3 + 3x^2y + y^2x + y^3 = 1$, biểu thức $y'$ tìm được là:
+\begin{enumerate}[label=\Alph*., leftmargin=*]
+    \item $-\frac{3x^2 + 6xy + y^2}{3x^2 + 2xy + 3y^2}$
+    \item $-\frac{3x^2 + 6xy + y^2}{3x^2 + 2xy + 3y^2}$
+    \item $\frac{3x^2 + 6xy + y^2}{3x^2 + 2xy + 3y^2}$
+    \item \textbf{Cả A và B đều đúng (cùng một công thức)}
+\end{enumerate}
+\textcolor{maincolor}{\textbf{Đáp án:} \textbf{D}. A và B là một.}
+\end{tcolorbox}
+\vspace{0.5cm}
+
+% Câu hỏi 6
+\begin{tcolorbox}[colback=blue!3, colframe=maincolor, title=\textbf{Câu 6: Ứng dụng thực tế}]
+Đạo hàm ẩn được dùng để tính:
+\begin{enumerate}[label=\Alph*., leftmargin=*]
+    \item Tốc độ thay đổi trong các mối quan hệ ràng buộc (kinh tế, vật lý)
+    \item Tiếp tuyến của đường cong không giải được $y$ theo $x$
+    \item Cả A và B
+    \item Không có ứng dụng thực tế
+\end{enumerate}
+\textcolor{maincolor}{\textbf{Đáp án:} \textbf{C}. Cả hai.}
+\end{tcolorbox}
+\vspace{0.5cm}
+
+% =========================================================
+% ĐƯỜNG LINK ĐẾN TÀI LIỆU ĐẦY ĐỦ (TƯỢNG TRƯNG)
+% =========================================================
+\begin{center}
+    \fcolorbox{maincolor}{yellow!10}{\parbox{0.9\textwidth}{%
+        \textbf{\textcolor{maincolor}{📝 Ghi nhớ cuối cùng:}} \\
+        Đạo hàm hàm ẩn chỉ có hai bước: (1) Đạo hàm hai vế theo $x$, nhớ quy tắc tích và hợp; (2) Gom $y'$ rồi cô lập nó. Đừng học thuộc công thức, hãy hiểu quy trình.
+        \vspace{0.3cm}
+        
+        \textbf{\textcolor{maincolor}{🌐 Làm bài tập đầy đủ tại đây:}} \\
+        \href{https://m...content-available-to-author-only...b.io/MAE101/implicit_diff_full}{\textcolor{blue}{\underline{https://m...content-available-to-author-only...b.io/MAE101/implicit_diff_full}}}
+    }}
+\end{center}
+
+\begin{center}
+    \textit{\textcolor{maincolor}{Sau khi làm bài tập, hãy tự hỏi: “Tôi đã hiểu được ‘điều công thức che giấu’ chưa?”.}}
+\end{center}
+
+\end{document}
